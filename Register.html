@@ -56,8 +56,8 @@
 
 <body>
     <div>
-        <form action="">
-            <b>Login</b>
+        <form  onsubmit="registerCustomer(event)">
+            <b>Register</b>
             <div id="container">
                 <input type="text" id="firstName" placeholder="First name" required>
                 <input type="text" id="lastName" placeholder="Last name" required>
@@ -74,10 +74,11 @@
         </form>
     </div>
     <script>
-        function registerCustomer() {
-
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+    const authToken = new URLSearchParams(window.location.search).get('token');
+        function registerCustomer(e) {
+            e.preventDefault();
+            const first_name = document.getElementById('firstName').value;
+            const last_name = document.getElementById('lastName').value;
             const street = document.getElementById('street').value;
             const address = document.getElementById('address').value;
             const city = document.getElementById('city').value;
@@ -87,8 +88,8 @@
 
             // Create a customer object (for demonstration purposes)
             const customer = {
-                firstName,
-                lastName,
+                first_name,
+                last_name,
                 street,
                 address,
                 city,
@@ -96,7 +97,8 @@
                 email,
                 phone
             };
-            fetch(proxy + `https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=create`, {
+      
+            fetch(`https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=create`, {
                 method: 'POST',
                 headers: {
                     // 'Content-Type': 'application/json',
@@ -109,7 +111,7 @@
                     if (!response.ok) {
                         alert("Registration failed");
                     }
-                    return response.json();
+                    return response;
                 })
                 .then(data => {
 
