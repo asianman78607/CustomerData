@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+     
+
+        table {
+            margin: auto;
+            margin-top: 40px;
+        }
+
+
+        #add_btn {
+
+            background-color: blueviolet;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 25px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+
+        <div >
+            <table border="1" cellpadding="14" bordercolor="black" id="customerTable">
+                <caption>
+                    <button id="add_btn">Add Customer</button>
+                    <h2>Customer List</h2>
+                </caption>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Address</th>
+                        <th>State</th>
+                        <th>City</th>
+                        <th>Street</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let authToken = "";
+
+       
+
+
+        //ay use local storage to store key
+        // dGVzdEBzdW5iYXNlZGF0YS5jb206VGVzdEAxMjM=
+
+
+        function getCustomerList() {
+
+            // api_url.searchParams.append('cmd', 'get_customer_list');
+
+            fetch(proxy + `https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=get_customer_list`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+
+                    populateTableBody(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function populateTableBody(data) {
+            console.log(data)
+            const tbody = document.getElementById('tableBody');
+
+            tbody.innerHTML = '';
+
+            for (let i = 0; i < data.length; i++) {
+                const row = document.createElement('tr');
+
+                // Assuming your data structure has properties like 'first_name', 'last_name', etc.
+                const properties = ['first_name', 'last_name', 'address', 'state', 'city', 'street', 'email', 'phone'];
+
+                // Create cells for each property
+                for (let j = 0; j < properties.length; j++) {
+                    let z = data[i][properties[j]];
+                    const cell = document.createElement('td');
+
+                    row.appendChild(cell)
+                    if (z == "") {
+
+                        cell.textContent = "--"
+                    }
+                    else {
+
+                        cell.textContent = z;
+                    }
+
+                }
+
+                // Create an action cell (modify as needed)
+                const actionCell = document.createElement('td');
+                actionCell.textContent = String.fromCodePoint(9940) + " " + String.fromCodePoint(128393);
+                row.appendChild(actionCell);
+
+                // Append the row to the tbody
+                tbody.appendChild(row);
+            }
+        }
+
+        function modify_data(uid, action) {
+            if (action === "edit") {
+
+            }
+            else if (action === "delete") {
+
+            }
+        }
+    </script>
+</body>
+
+</html>

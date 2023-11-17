@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        div {
+            display: flex;
+
+            height: 80vh;
+
+
+        }
+
+        form {
+            font-size: 35px;
+            border: 8px rgb(114, 111, 111) solid;
+            border-radius: 7px;
+            padding: 8px;
+            margin: auto;
+
+
+        }
+
+        #container {
+            display: grid;
+            grid-template-columns: auto auto;
+            flex-direction: column;
+            row-gap: 2rem;
+            height: max-content;
+            padding: 12px;
+            column-gap: 25px;
+        }
+
+        #container>input {
+            font-size: 20px;
+            border-radius: 4px;
+            padding: 3px;
+
+        }
+
+        #submit_btn {
+            background-color: rgb(0 133 252);
+            color: white;
+            border-radius: 5px;
+            min-width: auto;
+            padding: 6px;
+            float: right;
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <form action="">
+            <b>Login</b>
+            <div id="container">
+                <input type="text" id="firstName" placeholder="First name" required>
+                <input type="text" id="lastName" placeholder="Last name" required>
+                <input type="text" id="street" placeholder="Street">
+                <input type="text" id="address" placeholder="Address">
+                <input type="text" id="city" placeholder="City" required>
+                <input type="text" id="state" placeholder="State">
+                <input type="email" id="email" placeholder="Email">
+                <input type="tel" id="phone" placeholder="Phone" maxlength="10">
+
+            </div>
+
+            <input id="submit_btn" type="submit" value="submit">
+        </form>
+    </div>
+    <script>
+        function registerCustomer() {
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const street = document.getElementById('street').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            // Create a customer object (for demonstration purposes)
+            const customer = {
+                firstName,
+                lastName,
+                street,
+                address,
+                city,
+                state,
+                email,
+                phone
+            };
+            fetch(proxy + `https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=create`, {
+                method: 'POST',
+                headers: {
+                    // 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                    
+                },
+                body: JSON.stringify(customer)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        alert("Registration failed");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+
+                    console.log("Data")
+                })
+                .catch(error => {
+                    alert("Some Error Occurred");
+                    console.log(error)
+                });
+        }
+
+    
+     
+    </script>
+</body>
+
+</html>
