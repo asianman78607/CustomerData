@@ -62,13 +62,13 @@
         function authenticateUser(e) {
             e.preventDefault();
 
-      
+ 
             const login_id = document.getElementById('login_id').value;
             const password = document.getElementById('password').value;
             fetch("https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp", {
                 method: 'POST',
                 headers: {
-                     'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     login_id: "test@sunbasedata.com",
@@ -84,8 +84,8 @@
                 .then(data => {
 
                     authToken = data.access_token;
-                    // window.location.href = `CustomerList.html?token=${authToken}`;
-                    
+                    console.log(authToken)
+                    getCustomerList()
                 })
                 .catch(error => {
                     alert("Some Error Occurred");
