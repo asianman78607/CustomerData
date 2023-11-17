@@ -62,10 +62,10 @@
         function authenticateUser(e) {
             e.preventDefault();
 
-            const proxy = "https://cors-anywhere.herokuapp.com/"
+      
             const login_id = document.getElementById('login_id').value;
             const password = document.getElementById('password').value;
-            fetch(proxy + "https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp", {
+            fetch("https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp", {
                 method: 'POST',
                 headers: {
                     // 'Content-Type': 'application/json'
@@ -84,8 +84,8 @@
                 .then(data => {
 
                     authToken = data.access_token;
-                    console.log(authToken)
-          
+                    window.location.href = `CustomerList.html?token=${authToken}`;
+                    
                 })
                 .catch(error => {
                     alert("Some Error Occurred");
