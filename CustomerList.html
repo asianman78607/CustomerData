@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-     
-
         table {
             margin: auto;
             margin-top: 40px;
@@ -29,7 +27,7 @@
 <body>
     <div>
 
-        <div >
+        <div>
             <table border="1" cellpadding="14" bordercolor="black" id="customerTable">
                 <caption>
                     <button id="add_btn">Add Customer</button>
@@ -55,9 +53,19 @@
         </div>
     </div>
     <script>
-        let authToken = "";
+        const proxy = "https://cors-anywhere.herokuapp.com/"
+        const authToken = new URLSearchParams(window.location.search).get('token');
+        if (authToken) {
+            getCustomerList();
+            document.getElementById("add_btn").addEventListener("click", registration_page);
 
-       
+
+        }
+        function registration_page() {
+            window.location.href = `Register.html?token=${authToken}`;
+        }
+
+
 
 
         //ay use local storage to store key
@@ -65,8 +73,6 @@
 
 
         function getCustomerList() {
-
-            // api_url.searchParams.append('cmd', 'get_customer_list');
 
             fetch(proxy + `https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=get_customer_list`, {
                 method: 'GET',
@@ -90,7 +96,6 @@
         }
 
         function populateTableBody(data) {
-            console.log(data)
             const tbody = document.getElementById('tableBody');
 
             tbody.innerHTML = '';
@@ -118,9 +123,22 @@
 
                 }
 
-                // Create an action cell (modify as needed)
+                const uid = data[i]['uuid']
+                let button1 = document.createElement("button");
+                button1.textContent = String.fromCodePoint(9940);
+                button1.onclick = function () {
+                    modify_data(uid, "edit")
+                };
+                let button2 = document.createElement("button");
+                button2.textContent = String.fromCodePoint(128393);
+                button2.onclick = function () {
+                    modify_data(uid, "delete")
+                };
+
                 const actionCell = document.createElement('td');
-                actionCell.textContent = String.fromCodePoint(9940) + " " + String.fromCodePoint(128393);
+                actionCell.appendChild(button1)
+                actionCell.appendChild(document.createTextNode("\u00A0\u00A0"))
+                actionCell.appendChild(button2)
                 row.appendChild(actionCell);
 
                 // Append the row to the tbody
@@ -129,10 +147,35 @@
         }
 
         function modify_data(uid, action) {
+           
             if (action === "edit") {
 
+                fetch(`https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp?cmd=delete&uuid=${uid}`, {
+                    method: 'POST',
+                    headers: {
+                        // 'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+
+                    },
+
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            alert("Deletion failed");
+                        }
+                        return response;
+                    })
+                    .then(data => {
+                        getCustomerList();
+                        console.log("Data")
+                    })
+                    .catch(error => {
+                        alert("Some Error Occurred");
+                        console.log(error)
+                    });
             }
             else if (action === "delete") {
+                console.log(uid, action)
 
             }
         }
